@@ -1,0 +1,74 @@
+version: "3.7"
+services:
+
+    tik_ca:
+        image: serialize/cfssl
+        links:
+        - cert_db
+        - sub_ca
+        depends_on:
+        - cert_db
+        - sub_ca
+        expose:
+        - 8888
+        volumes:
+        - tik_ca_data:/etc/cfssl
+        - root_ca_data:/etc/cfssl/sub_ca
+        - $PWD/tik_ca/entrypoint.sh:/usr/local/bin/entrypoint
+        - $PWD/tik_ca/config.json:/etc/cfssl/config.json
+        - $PWD/tik_ca/config-remote.json:/etc/cfssl/config-remote.json
+        - $PWD/cert_db/db-config.json:/etc/cfssl/db-config.json
+        entrypoint:
+        - "entrypoint"
+
+    svc_ca:
+        image: serialize/cfssl
+        links:
+        - cert_db
+        - sub_ca
+        depends_on:
+        - cert_db
+        - sub_ca
+        expose:
+        - 8888
+        volumes:
+        - svc_ca_data:/etc/cfssl
+        - root_ca_data:/etc/cfssl/sub_ca
+        - $PWD/svc_ca/entrypoint.sh:/usr/local/bin/entrypoint
+        - $PWD/svc_ca/config:/etc/cfssl/config
+        - $PWD/svc_ca/roots.ini:/etc/cfssl/roots.ini
+        - $PWD/cert_db/db-config.json:/etc/cfssl/db-config.json
+        entrypoint:
+        - "entrypoint"
+
+    sub_ca:
+        image: serialize/cfssl
+        links:
+        - cert_db
+        depends_on:
+        - cert_db
+        expose:
+        - 8888
+        volumes:
+        - root_ca_data:/etc/cfssl
+        - $PWD/sub_ca/entrypoint.sh:/usr/local/bin/entrypoint
+        - $PWD/sub_ca/config.json:/etc/cfssl/config.json
+        - $PWD/cert_db/db-config.json:/etc/cfssl/db-config.json
+        entrypoint:
+        - "entrypoint"
+
+    cert_db:
+        image: postgres:alpine
+        expose:
+        - 5432
+        environment: 
+        - "POSTGRES_PASSWORD=01020304050607080910111213141516"
+        volumes:
+        - cert_db_data:/var/lib/postgresql/data
+        - $PWD/cert_db/create.sql:/docker-entrypoint-initdb.d/create.sql
+
+volumes:
+    tik_ca_data:
+    svc_ca_data:
+    root_ca_data:
+    cert_db_data:

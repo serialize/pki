@@ -1,0 +1,5 @@
+{
+    "driver": "postgres",
+    "data_source": "postgres://postgres:01020304050607080910111213141516@cert_db:5432/postgres?sslmode=disable"
+}
+  

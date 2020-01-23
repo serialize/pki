@@ -1,0 +1,27 @@
+{
+    "auth_keys": {
+        "root_ca": {
+            "type": "standard",
+            "key": "01020304050607080910111213141516"
+        }
+    },
+    "signing": {
+      "default": {
+        "auth_remote": {
+          "remote": "root_ca",
+          "auth_key": "root_ca"
+        }
+      },
+      "profiles": {
+        "intermediate": {
+          "auth_remote": {
+            "remote": "root_ca",
+            "auth_key": "root_ca"
+          }
+        }
+      }
+    },
+    "remotes": {
+      "root_ca": "https://root_ca:8888"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "auth_keys": {
+        "default": {
+            "type": "standard",
+            "key": "01020304050607080910111213141516"
+        }
+    },
+    "signing": {
+        "default": {
+            "auth_key": "default",
+            "expiry": "17520h",
+            "usages": [
+                "signing",
+                "digital signing",
+                "key encipherment",
+                "client auth"
+            ]
+        }
+    }
+
+}
